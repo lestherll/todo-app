@@ -13,6 +13,7 @@ uvicorn-worker = "^0.0.1"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 requests = "^2.26.0"
+black = "^21.12b0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

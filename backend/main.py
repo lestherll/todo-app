@@ -26,20 +26,20 @@ todo_db: List[TodoOut] = [
         title="First Todo",
         content="A todo list content test",
         author="test_user_1",
-        date_created=datetime.now()
-        ),
+        date_created=datetime.now(),
+    ),
     TodoOut(
         title="Second Todo",
         content="Test content 2",
         author="test_user_1",
-        date_created=datetime.now()
-        )
+        date_created=datetime.now(),
+    ),
 ]
 
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "This is a todo list"}
 
 
 @app.get("/todos")
@@ -49,6 +49,8 @@ async def read_todos() -> List[TodoOut]:
 
 @app.post("/todos")
 async def create_todos(todo: TodoIn) -> TodoOut:
-    new_todo: TodoOut = TodoOut(**todo.dict(), author="test_user_1", date_created=datetime.now())
+    new_todo: TodoOut = TodoOut(
+        **todo.dict(), author="test_user_1", date_created=datetime.now()
+    )
     todo_db.append(new_todo)
     return new_todo
