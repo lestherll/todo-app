@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
-from typing import List
+from routers import todo
 
-from schemas import TodoIn, TodoOut
 
 app = FastAPI()
+
+app.include_router(todo.router)
 
 origins = [
     "http://localhost:5000",
@@ -21,36 +21,6 @@ app.add_middleware(
 )
 
 
-todo_db: List[TodoOut] = [
-    TodoOut(
-        title="First Todo",
-        content="A todo list content test",
-        author="test_user_1",
-        date_created=datetime.now(),
-    ),
-    TodoOut(
-        title="Second Todo",
-        content="Test content 2",
-        author="test_user_1",
-        date_created=datetime.now(),
-    ),
-]
-
-
 @app.get("/")
 async def root():
     return {"message": "This is a todo list"}
-
-
-@app.get("/todos")
-async def read_todos() -> List[TodoOut]:
-    return todo_db
-
-
-@app.post("/todos")
-async def create_todos(todo: TodoIn) -> TodoOut:
-    new_todo: TodoOut = TodoOut(
-        **todo.dict(), author="test_user_1", date_created=datetime.now()
-    )
-    todo_db.append(new_todo)
-    return new_todo
