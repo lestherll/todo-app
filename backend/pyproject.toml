@@ -9,6 +9,7 @@ license = "MIT"
 python = "^3.9"
 fastapi = "^0.70.1"
 uvicorn-worker = "^0.0.1"
+tortoise-orm = {extras = ["aiosqlite"], version = "^0.18.0"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

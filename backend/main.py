@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import todo
 
+from tortoise.contrib.fastapi import register_tortoise
+
 
 app = FastAPI()
 
@@ -24,3 +26,12 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "This is a todo list"}
+
+
+register_tortoise(
+    app,
+    db_url="sqlite://./todo-app.db",
+    modules={"models": ["core.models.model"]},
+    generate_schemas=True,
+    add_exception_handlers=True,
+)
