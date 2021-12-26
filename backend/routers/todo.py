@@ -9,13 +9,13 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-async def read_todos() -> List[TodoOut]:
+@router.get("/", response_model=List[TodoOut])
+async def read_todos():
     return await TodoOut.from_queryset(Todo.all())
 
 
-@router.post("/")
-async def create_todos(todo: TodoIn) -> TodoOut:
+@router.post("/", response_model=TodoOut)
+async def create_todos(todo: TodoIn):
 
     todo_obj = await Todo.create(
         **todo.dict(exclude_unset=True), author="test_user1", created_at=datetime.now()
@@ -23,9 +23,16 @@ async def create_todos(todo: TodoIn) -> TodoOut:
     return await TodoOut.from_tortoise_orm(todo_obj)
 
 
-@router.put("/")
-async def update_todo(todo: TodoUpdate) -> TodoOut:
+@router.put("/", response_model=TodoOut)
+async def update_todo(todo: TodoUpdate):
     await Todo.filter(id=todo.id).update(
         **todo.dict(exclude_unset=True, exclude={"id"})
     )
     return await TodoOut.from_queryset_single(Todo.get(id=todo.id))
+
+
+@router.delete("/", response_model=TodoOut)
+async def delete_todo(todo_id: int):
+    todo_to_delete = await Todo.filter(id=todo_id).get()
+    await todo_to_delete.delete()
+    return todo_to_delete
