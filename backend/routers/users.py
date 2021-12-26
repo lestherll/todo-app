@@ -1,6 +1,7 @@
 from typing import List
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from core.models.model import User, UserIn, UserOut, UserUpdate
+from core.dependencies import login_manager
 from datetime import datetime
 
 router = APIRouter(
@@ -20,9 +21,15 @@ async def create_user(user: UserIn):
     )
     return await UserOut.from_tortoise_orm(user_obj)
 
+
 @router.put("/", response_model=UserOut)
 async def update_user(user: UserUpdate):
     await User.filter(id=user.id).update(
-        **user.dict(exclude_unset=True, exclude=["id"])
+        **user.dict(exclude_unset=True, exclude={"id"})
     )
     return await UserOut.from_queryset_single(User.get(id=user.id))
+
+
+@router.get("/me", response_model=UserOut)
+async def read_current_user(user=Depends(login_manager)):
+    return await UserOut.from_queryset_single(user)

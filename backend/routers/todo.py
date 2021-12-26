@@ -8,6 +8,7 @@ router = APIRouter(
     prefix="/todos", tags=["todos"], responses={404: {"description": "Not found"}}
 )
 
+
 def get_current_user():
     return 1
 
