@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import todo
+from routers import todo, users
 
 from tortoise.contrib.fastapi import register_tortoise
 
@@ -8,6 +8,7 @@ from tortoise.contrib.fastapi import register_tortoise
 app = FastAPI()
 
 app.include_router(todo.router)
+app.include_router(users.router)
 
 origins = [
     "http://localhost:5000",
