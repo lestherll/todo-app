@@ -1,11 +1,13 @@
+from datetime import datetime
+
+from core.dependencies import login_manager
+from core.models import crud
+from core.models.model import User, UserIn, UserOut
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_login.exceptions import InvalidCredentialsException
-from core.models import crud
-from core.dependencies import login_manager
 
-
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/login")
@@ -21,3 +23,11 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
 
     access_token = login_manager.create_access_token(data={"sub": user.id})
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/register", response_model=UserOut)
+async def create_user(user: UserIn):
+    user_obj = await User.create(
+        **user.dict(exclude_unset=True), created_at=datetime.now()
+    )
+    return await UserOut.from_tortoise_orm(user_obj)

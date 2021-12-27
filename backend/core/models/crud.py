@@ -4,7 +4,7 @@ from core.dependencies import login_manager
 
 @login_manager.user_loader()
 async def get_user_by_id(id: int) -> User:
-    return User.get(id=id)
+    return await User.get(id=id)
 
 
 async def get_user_by_username(username: str) -> User:
