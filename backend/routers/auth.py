@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from core.dependencies import login_manager
-from core.models import crud
-from core.models.model import User, UserIn, UserOut
+from database import crud
+from database.model import User, UserIn, UserOut
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_login.exceptions import InvalidCredentialsException

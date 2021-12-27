@@ -13,12 +13,12 @@ class User(models.Model):
         ...
 
 
-UserIn = pydantic_model_creator(User, name="UserIn", exclude=["id", "created_at"])
+UserIn = pydantic_model_creator(User, name="UserIn", exclude=("id", "created_at"))
 UserOut = pydantic_model_creator(
-    User, name="UserOut", exclude=["created_at", "password"]
+    User, name="UserOut", exclude=("created_at", "password")
 )
 UserUpdate = pydantic_model_creator(
-    User, name="UserUpdate", exclude=["id", "created_at"]
+    User, name="UserUpdate", exclude=("id", "created_at")
 )
 
 
@@ -33,6 +33,6 @@ class Todo(models.Model):
         ...
 
 
-TodoIn = pydantic_model_creator(Todo, name="TodoIn", exclude=["id", "created_at"])
+TodoIn = pydantic_model_creator(Todo, name="TodoIn", exclude=("id", "created_at"))
 TodoOut = pydantic_model_creator(Todo, name="TodoOut")
-TodoUpdate = pydantic_model_creator(Todo, name="TodoUpdate", exclude=["created_at"])
+TodoUpdate = pydantic_model_creator(Todo, name="TodoUpdate", exclude=("created_at",))

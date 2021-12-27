@@ -1,4 +1,4 @@
-from core.models.model import User, UserOut
+from database.model import User, UserOut
 from core.dependencies import login_manager
 
 

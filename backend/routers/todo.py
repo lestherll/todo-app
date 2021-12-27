@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from core.models.model import Todo, TodoIn, TodoOut, TodoUpdate, User
+from database.model import Todo, TodoIn, TodoOut, TodoUpdate, User
 from typing import List
 from datetime import datetime
 
@@ -31,7 +31,7 @@ async def create_todo(todo: TodoIn):
 @router.put("/", response_model=TodoOut)
 async def update_todo(todo: TodoUpdate):
     await Todo.filter(id=todo.id).update(
-        **todo.dict(exclude_unset=True, exclude=["id"])
+        **todo.dict(exclude_unset=True, exclude={"id"})
     )
     return await TodoOut.from_queryset_single(Todo.get(id=todo.id))
 

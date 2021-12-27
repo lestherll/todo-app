@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from core.models.model import TodoOut
+from database.model import TodoOut
 
 
 todo_db: List[TodoOut] = [

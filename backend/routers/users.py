@@ -1,7 +1,7 @@
 from typing import List
 
 from core.dependencies import login_manager
-from core.models.model import User, UserOut, UserUpdate
+from database.model import User, UserOut, UserUpdate
 from fastapi import APIRouter, Depends
 
 router = APIRouter(

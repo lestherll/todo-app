@@ -34,7 +34,7 @@ async def root():
 register_tortoise(
     app,
     db_url=settings.DB_URI,
-    modules={"models": ["core.models.model"]},
+    modules={"models": ["database.model"]},
     generate_schemas=True,
     add_exception_handlers=True,
 )
