@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from core.dependencies import login_manager
 
@@ -28,3 +29,7 @@ async def create_todo(todo: TodoIn, author: User) -> Todo:
     return await Todo.create(
         **todo.dict(exclude_unset=True), author_id=author, created_at=datetime.now()
     )
+
+
+async def read_todo_by_user(user: User) -> List[Todo]:
+    return await Todo.filter(author_id=user)

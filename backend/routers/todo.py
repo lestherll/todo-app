@@ -12,8 +12,8 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[TodoOut])
-async def read_todos():
-    return await TodoOut.from_queryset(Todo.all())
+async def read_todo(user: User = Depends(login_manager)):
+    return await crud.read_todo_by_user(user)
 
 
 @router.post("/", response_model=TodoOut)
