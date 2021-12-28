@@ -1,16 +1,14 @@
-from fastapi import APIRouter
-from database.model import Todo, TodoIn, TodoOut, TodoUpdate, User
 from typing import List
-from datetime import datetime
 
+from core.dependencies import login_manager
+from database import crud
+from database.model import Todo, TodoIn, TodoOut, TodoUpdate, User
+from fastapi import APIRouter
+from fastapi.param_functions import Depends
 
 router = APIRouter(
     prefix="/todos", tags=["todos"], responses={404: {"description": "Not found"}}
 )
-
-
-def get_current_user():
-    return 1
 
 
 @router.get("/", response_model=List[TodoOut])
@@ -19,13 +17,9 @@ async def read_todos():
 
 
 @router.post("/", response_model=TodoOut)
-async def create_todo(todo: TodoIn):
-    author = await User.get(id=get_current_user())
-
-    todo_obj = await Todo.create(
-        **todo.dict(exclude_unset=True), author_id=author, created_at=datetime.now()
-    )
-    return await TodoOut.from_tortoise_orm(todo_obj)
+async def create_todo(todo: TodoIn, author: User = Depends(login_manager)):
+    new_todo = await crud.create_todo(todo, author)
+    return await TodoOut.from_tortoise_orm(new_todo)
 
 
 @router.put("/", response_model=TodoOut)
