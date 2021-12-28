@@ -1,4 +1,5 @@
 from typing import List
+from database import crud
 
 from core.dependencies import login_manager
 from database.model import User, UserOut, UserUpdate
@@ -18,8 +19,7 @@ async def read_users():
 
 @router.put("/", response_model=UserOut)
 async def update_user(user: UserUpdate, current_user: User = Depends(login_manager)):
-    await current_user.update_from_dict(user.dict(exclude_unset=True))
-    await current_user.save()
+    current_user = await crud.update_user(current_user, user)
     return await UserOut.from_tortoise_orm(current_user)
 
 

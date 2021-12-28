@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from core.dependencies import login_manager
 from database import crud
 from database.model import User, UserIn, UserOut
@@ -26,8 +24,6 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
 
 
 @router.post("/register", response_model=UserOut)
-async def create_user(user: UserIn):
-    user_obj = await User.create(
-        **user.dict(exclude_unset=True), created_at=datetime.now()
-    )
+async def register(user: UserIn):
+    user_obj = await crud.create_user(user=user)
     return await UserOut.from_tortoise_orm(user_obj)
