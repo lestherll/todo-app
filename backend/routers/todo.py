@@ -13,7 +13,7 @@ router = APIRouter(
 
 @router.get("/", response_model=List[TodoOut])
 async def read_todo(user: User = Depends(login_manager)):
-    return await crud.read_todo_by_user(user)
+    return await crud.read_all_todo_by_user(user)
 
 
 @router.post("/", response_model=TodoOut)
@@ -23,11 +23,9 @@ async def create_todo(todo: TodoIn, author: User = Depends(login_manager)):
 
 
 @router.put("/", response_model=TodoOut)
-async def update_todo(todo: TodoUpdate):
-    await Todo.filter(id=todo.id).update(
-        **todo.dict(exclude_unset=True, exclude={"id"})
-    )
-    return await TodoOut.from_queryset_single(Todo.get(id=todo.id))
+async def update_todo(todo: TodoUpdate, author: User = Depends(login_manager)):
+    updated_todo = await crud.update_todo_by_user(todo, author)
+    return await TodoOut.from_tortoise_orm(updated_todo)
 
 
 @router.delete("/", response_model=TodoOut)

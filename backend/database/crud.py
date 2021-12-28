@@ -1,9 +1,10 @@
 from datetime import datetime
-from typing import List
+from enum import auto
+from typing import List, Optional
 
 from core.dependencies import login_manager
 
-from database.model import Todo, TodoIn, User, UserIn, UserUpdate
+from database.model import Todo, TodoIn, TodoUpdate, User, UserIn, UserUpdate
 
 
 @login_manager.user_loader()
@@ -31,5 +32,27 @@ async def create_todo(todo: TodoIn, author: User) -> Todo:
     )
 
 
-async def read_todo_by_user(user: User) -> List[Todo]:
+async def read_todo_by_id(id: int) -> Todo:
+    return await Todo.get(id=id)
+
+
+async def read_todo_by_user(todo_id: int, user: User) -> Todo:
+    return await Todo.get(id=todo_id, author_id=user)
+
+
+async def read_all_todo_by_user(user: User) -> List[Todo]:
     return await Todo.filter(author_id=user)
+
+
+async def update_todo(todo: TodoUpdate) -> Todo:
+    todo_db_model = await Todo.get(id=todo.id)
+    todo_db_model.update_from_dict(todo.dict(exclude_unset=True, exclude={"id"}))
+    await todo_db_model.save()
+    return todo_db_model
+
+
+async def update_todo_by_user(todo: TodoUpdate, user: User) -> Todo:
+    todo_db_model = await Todo.get(id=todo.id, author_id=user)
+    todo_db_model.update_from_dict(todo.dict(exclude_unset=True, exclude={"id"}))
+    await todo_db_model.save()
+    return todo_db_model
